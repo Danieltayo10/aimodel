@@ -1,10 +1,10 @@
 from fastapi import FastAPI, UploadFile, File
 import pandas as pd
 import os
-import openai
+from openai import OpenAI
 from train_utils import train_model, load_model, predict, explain
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(base_url="https://openrouter.ai/api/v1",api_key=os.getenv("OPENAI_API_KEY"))
 
 app = FastAPI(title="Universal AI Decision Engine")
 
@@ -34,7 +34,7 @@ def run_prediction(input_data: dict):
     explanation = explain(model, feature_columns, input_data)
 
     ai_summary = None
-    if openai.api_key:
+    if client.api_key:
         prompt = f"""
 Prediction: {pred}
 Probability (if classification): {proba}
@@ -43,13 +43,18 @@ Feature impacts: {explanation}
 Explain this result in clear business language and suggest actionable steps.
 """
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=200
+            response = client.responses.create(
+                model="mistralai/mixtral-8x7b-instruct",
+                input=prompt,
+                max_output_tokens=200
             )
-            ai_summary = response.choices[0].message.content
+            ai_summary = response.output_text
         except:
             ai_summary = None
 
-    return {"prediction": pred, "probability": proba, "explanation": explanation, "ai_summary": ai_summary}
+    return {
+        "prediction": pred,
+        "probability": proba,
+        "explanation": explanation,
+        "ai_summary": ai_summary
+    }
