@@ -8,3 +8,4 @@ uvicorn
 openai
 textblob
 scikit-learn
+python-multipart
