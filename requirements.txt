@@ -1,10 +1,10 @@
 streamlit
-fastapi
-uvicorn[standard]
 pandas
 scikit-learn
-joblib
 shap
+joblib
+fastapi
+uvicorn
 openai
-requests
-python-multipart
+textblob
+scikit-learn
