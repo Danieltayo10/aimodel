@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 
-BACKEND_URL = "https://aimodel-nnmo.onrender.com"
+BACKEND_URL = "https://aimodel-1faster.onrender.com"
 
 st.set_page_config(layout="wide")
 st.title("Universal AI Business Intelligence Engine")
